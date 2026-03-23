@@ -1,0 +1,74 @@
+{
+  "name": "code-beautifier",
+  "version": "1.0.0",
+  "description": "Export beautiful code snippets as images or self-contained HTML",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron:dev": "concurrently -k \"vite\" \"NODE_ENV=development electron .\"",
+    "electron:build": "vite build && electron-builder --mac --win",
+    "electron:build:mac": "vite build && electron-builder --mac dmg",
+    "electron:build:win": "vite build && electron-builder --win nsis",
+    "electron:build:all": "vite build && electron-builder --mac dmg --win nsis"
+  },
+  "build": {
+    "appId": "com.codebeautifier.app",
+    "productName": "Code Beautifier",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        "dmg"
+      ],
+      "icon": "build/icon.icns",
+      "darkModeSupport": true
+    },
+    "dmg": {
+      "title": "Code Beautifier",
+      "contents": [
+        { "x": 130, "y": 220 },
+        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Code Beautifier",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico"
+    }
+  },
+  "author": "garrik.design (https://garrik.design)",
+  "license": "MIT",
+  "dependencies": {
+    "html-to-image": "^1.11.13",
+    "shiki": "^4.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
+    "vite": "^8.0.2"
+  }
+}

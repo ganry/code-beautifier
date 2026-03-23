@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code Beautifier</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+</head>
+<body>
+  <div id="app">
+    <!-- Electron Title Bar (hidden in browser, shown in Electron) -->
+    <div id="electron-titlebar">
+      <span class="titlebar-title">Code Beautifier</span>
+    </div>
+
+    <div id="app-body">
+    <!-- Controls Panel -->
+    <aside class="controls-panel">
+      <div class="controls-header">
+        <h1>Code Beautifier</h1>
+        <p>Beautiful code exports in one click</p>
+      </div>
+
+      <div class="controls-body">
+        <!-- Code Input -->
+        <div class="control-group">
+          <label for="code-input">Code</label>
+          <textarea id="code-input" spellcheck="false" placeholder="Paste your code here..."></textarea>
+        </div>
+
+        <!-- Language -->
+        <div class="control-group">
+          <label for="lang-select">Language</label>
+          <select id="lang-select">
+            <option value="javascript">javascript</option>
+          </select>
+        </div>
+
+        <!-- Theme -->
+        <div class="control-group">
+          <label for="theme-select">Theme</label>
+          <select id="theme-select">
+            <option value="vitesse-dark">vitesse-dark</option>
+          </select>
+        </div>
+
+        <!-- Background -->
+        <div class="control-group">
+          <label>Background</label>
+          <div id="bg-presets"></div>
+          <div id="wp-presets"></div>
+          <div class="gradient-builder">
+            <label class="sub-label">Custom Gradient</label>
+            <div class="gradient-colors">
+              <input type="color" id="grad-color1" value="#667eea">
+              <span class="gradient-arrow">→</span>
+              <input type="color" id="grad-color2" value="#764ba2">
+              <select id="grad-angle" title="Direction">
+                <option value="135">↘ 135°</option>
+                <option value="90">→ 90°</option>
+                <option value="180">↓ 180°</option>
+                <option value="45">↗ 45°</option>
+                <option value="0">↑ 0°</option>
+                <option value="270">← 270°</option>
+              </select>
+              <button class="btn-apply-gradient" id="btn-apply-gradient" title="Apply gradient">Apply</button>
+            </div>
+            <div class="gradient-preview-bar" id="gradient-preview-bar"></div>
+          </div>
+          <input type="text" id="bg-custom" value="linear-gradient(135deg, #667eea 0%, #764ba2 100%)" placeholder="CSS color or gradient">
+        </div>
+
+        <!-- Padding -->
+        <div class="control-group">
+          <label>Padding</label>
+          <div class="slider-row">
+            <input type="range" id="padding-slider" min="0" max="200" value="48" step="4">
+            <span class="slider-value" id="padding-value">48px</span>
+          </div>
+        </div>
+
+        <!-- Window Width -->
+        <div class="control-group">
+          <label>Window Width</label>
+          <div class="slider-row">
+            <input type="range" id="width-slider" min="300" max="1200" value="680" step="10">
+            <span class="slider-value" id="width-value">680px</span>
+          </div>
+        </div>
+
+        <!-- Font Size -->
+        <div class="control-group">
+          <label>Font Size</label>
+          <div class="slider-row">
+            <input type="range" id="fontsize-slider" min="12" max="24" value="14" step="1">
+            <span class="slider-value" id="fontsize-value">14px</span>
+          </div>
+        </div>
+
+        <!-- Window Title -->
+        <div class="control-group">
+          <label for="window-title">Window Title</label>
+          <input type="text" id="window-title" placeholder="Optional title...">
+        </div>
+
+        <!-- Window Style -->
+        <div class="control-group">
+          <label>Window Style</label>
+          <div id="window-style-picker" class="window-style-picker">
+            <button class="window-style-btn active" data-style="solid" title="Solid">
+              <div class="style-preview style-preview-solid">
+                <div class="sp-titlebar"><span class="sp-dot r"></span><span class="sp-dot y"></span><span class="sp-dot g"></span></div>
+                <div class="sp-lines"><div></div><div></div><div></div></div>
+              </div>
+              <span class="style-label">Solid</span>
+            </button>
+            <button class="window-style-btn" data-style="blur" title="Blur / Glass">
+              <div class="style-preview style-preview-blur">
+                <div class="sp-titlebar"><span class="sp-dot r"></span><span class="sp-dot y"></span><span class="sp-dot g"></span></div>
+                <div class="sp-lines"><div></div><div></div><div></div></div>
+              </div>
+              <span class="style-label">Glass</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Shadow -->
+        <div class="control-group">
+          <div class="checkbox-row">
+            <input type="checkbox" id="shadow-toggle" checked>
+            <span>Window Shadow</span>
+          </div>
+        </div>
+
+        <!-- Watermark -->
+        <div class="control-group">
+          <div class="checkbox-row">
+            <input type="checkbox" id="watermark-toggle" checked>
+            <span>Watermark</span>
+          </div>
+        </div>
+
+        <!-- Export Quality -->
+        <div class="control-group">
+          <label>Export Quality</label>
+          <div class="quality-picker">
+            <button class="quality-btn" data-scale="1">1x</button>
+            <button class="quality-btn active" data-scale="2">2x HD</button>
+            <button class="quality-btn" data-scale="4">4x 4K</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Export Buttons -->
+      <div class="export-buttons">
+        <button class="btn btn-primary" id="btn-export-png">Export PNG</button>
+        <button class="btn btn-secondary" id="btn-export-html">HTML</button>
+        <button class="btn btn-secondary" id="btn-copy-html">Copy</button>
+      </div>
+    </aside>
+
+    <!-- Resize Handle -->
+    <div id="panel-resizer"></div>
+
+    <!-- Preview -->
+    <div id="preview-container">
+      <span class="loading">Loading...</span>
+    </div>
+    </div><!-- /app-body -->
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

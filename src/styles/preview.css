@@ -1,0 +1,139 @@
+#preview-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: #0a0a0a;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+  background-size: 24px 24px;
+  overflow: auto;
+  padding: 24px;
+}
+
+.preview-background {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  min-width: 200px;
+}
+
+.window-frame {
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 100%;
+  min-width: 300px;
+}
+
+.window-titlebar {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  position: relative;
+  user-select: none;
+}
+
+.traffic-lights {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.red {
+  background: #ff5f57;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+}
+
+.dot.yellow {
+  background: #febc2e;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+}
+
+.dot.green {
+  background: #28c840;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.12);
+}
+
+.window-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60%;
+}
+
+.titlebar-spacer {
+  flex: 1;
+}
+
+.window-content pre {
+  margin: 0;
+  padding: 20px 24px;
+  line-height: 1.6;
+  font-family: 'Fira Code', 'JetBrains Mono', 'SF Mono', 'Cascadia Code', 'Consolas', monospace;
+  overflow-x: auto;
+  tab-size: 2;
+}
+
+/* Style scrollbar inside code window */
+.window-content pre::-webkit-scrollbar {
+  height: 6px;
+}
+
+.window-content pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.window-content pre::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 3px;
+}
+
+.window-content pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.window-content pre code {
+  font-family: inherit;
+}
+
+/* Watermark */
+.watermark {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.12);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  user-select: none;
+  z-index: 2;
+}
+
+.preview-background {
+  position: relative;
+}
+
+/* Loading state */
+#preview-container .loading {
+  color: rgba(255,255,255,0.4);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+}
