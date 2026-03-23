@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+release/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Electron
+*.dmg
+*.exe
+*.AppImage
+*.snap
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+
+# Icon build artifacts
+build/icon.iconset/
+
+# Claude
+.claude/
