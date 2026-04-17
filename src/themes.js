@@ -8,7 +8,7 @@ import wp07 from './wallpapers/wallpaper07.jpg'
 
 export const BACKGROUND_PRESETS = [
   // Classic gradients
-  { name: 'Twilight', value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
+  { name: 'Rosé', value: 'linear-gradient(135deg, #f471b5 0%, #c0457a 100%)' },
   { name: 'Sunset', value: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
   { name: 'Ocean', value: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' },
   { name: 'Forest', value: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)' },

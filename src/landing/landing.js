@@ -1,8 +1,24 @@
 import './landing.css'
 
-// Scroll-triggered fade-in animations
+// Nav scroll effect — transparent to blurred on scroll
+function initNavScroll() {
+  const nav = document.getElementById('nav')
+  if (!nav) return
+  let ticking = false
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        nav.classList.toggle('scrolled', window.scrollY > 40)
+        ticking = false
+      })
+      ticking = true
+    }
+  }, { passive: true })
+}
+
+// Scroll-triggered reveal animations
 function initScrollAnimations() {
-  const elements = document.querySelectorAll('.animate-in')
+  const elements = document.querySelectorAll('.reveal')
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -11,22 +27,32 @@ function initScrollAnimations() {
         observer.unobserve(entry.target)
       }
     })
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' })
+  }, { threshold: 0.06, rootMargin: '-20px' })
 
   elements.forEach((el) => observer.observe(el))
+
+  // Check on load for already-visible elements
+  requestAnimationFrame(() => {
+    elements.forEach((el) => {
+      const rect = el.getBoundingClientRect()
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add('visible')
+        observer.unobserve(el)
+      }
+    })
+  })
 }
 
-// Mouse-following gradient glow on hero
-function initHeroGlow() {
-  const hero = document.querySelector('.hero')
-  if (!hero) return
+// Global mouse-following gradient
+function initGlobalGradient() {
+  const gradient = document.getElementById('bgGradient')
+  if (!gradient) return
 
-  hero.addEventListener('mousemove', (e) => {
-    const rect = hero.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-    hero.style.setProperty('--mouse-x', `${x}%`)
-    hero.style.setProperty('--mouse-y', `${y}%`)
+  document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth * 100).toFixed(1)
+    const y = (e.clientY / window.innerHeight * 100).toFixed(1)
+    gradient.style.setProperty('--mx', x + '%')
+    gradient.style.setProperty('--my', y + '%')
   })
 }
 
@@ -42,7 +68,8 @@ function initSmoothScroll() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  initNavScroll()
   initScrollAnimations()
-  initHeroGlow()
+  initGlobalGradient()
   initSmoothScroll()
 })

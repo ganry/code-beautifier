@@ -1,19 +1,37 @@
-# Code Beautifier
+# Screenshot & Code Beautifier
 
-Export beautiful code snippets as images or self-contained HTML.
+Export beautiful screenshots and code snippets as images or self-contained HTML. Perfect for App Store assets, social posts, and docs.
 
-**[Try it online](https://garrik.design/code/app.html)**
+**[Try it online](https://garrik.design/code/app.html)** | **[GitHub](https://github.com/ganry/code-beautifier)**
 
 ## Features
 
-- **200+ Languages** — Syntax highlighting powered by Shiki with VS Code TextMate grammars
-- **Self-Contained HTML Export** — All styles inlined, works offline, zero external dependencies
-- **Retina PNG Export** — 1x, 2x HD, or 4x 4K resolution
-- **macOS Window Chrome** — Realistic traffic light dots, title bar, rounded corners
-- **Glass & Solid Modes** — Frosted glassmorphism or classic solid window styles
-- **Custom Backgrounds** — 25+ gradient presets, solid colors, wallpaper images, or build your own gradient
-- **Watermark** — Optional garrik.design/code watermark on exports
-- **Resizable Panels** — Drag to resize the controls and preview panels
+### Two modes, one tool
+- **Code mode** — 200+ languages via Shiki (VS Code TextMate grammars), 17 syntax themes
+- **Image mode** — Drop in any screenshot and wrap it in a polished frame
+
+### Image inputs (three ways)
+- **File picker** — Choose image from disk
+- **Drag & drop** — Drop any image onto the preview
+- **Paste with Cmd+V** — Paste screenshots straight from the macOS clipboard
+
+### Canvas & output sizing
+Pick an exact pixel canvas so exports match App Store / store-listing specs:
+- **Mac App Store** — 1280×800, 1440×900, 2560×1600, 2880×1800
+- **iPhone App Store** — 1290×2796 (6.7"), 1320×2868 (6.9")
+- **iPad App Store** — 2064×2752, 2048×2732
+- **Custom** — any width × height
+- **Fit to content** — classic mode, canvas auto-sizes
+
+### Styling controls
+- **macOS window chrome** — Traffic lights, title bar, rounded corners (toggle on/off in Image mode)
+- **Glass & Solid** window styles for code
+- **Rounded corners**, **scale**, and **fit** (contain/cover) for images
+- **25+ backgrounds** — gradient presets, solid colors, wallpaper images, or build your own gradient
+- **Padding**, **window width**, **font size**, **shadow**, **watermark** — all adjustable
+- **Retina PNG export** — 1×, 2× HD, or 4× 4K resolution
+- **Self-contained HTML export** — All styles inlined, works offline
+- **Resizable panels** — Drag the splitter to resize controls vs. preview
 
 ## Tech Stack
 
@@ -40,22 +58,22 @@ npm run build
 The project is a Vite multi-page app:
 
 - `/` — Landing page (`index.html`)
-- `/app.html` — Code Beautifier app
+- `/app.html` — Beautifier app
 
 ```
 index.html              # Landing page
 app.html                # App entry point
 src/
   main.js               # App initialization
-  highlighter.js         # Shiki syntax highlighting
-  preview.js             # Preview rendering
-  export-html.js         # Self-contained HTML export
-  export-image.js        # PNG export
-  ui-controls.js         # UI controls
-  themes.js              # Background presets & wallpapers
-  landing/               # Landing page assets
-  styles/                # CSS
-  wallpapers/            # Background images
+  highlighter.js        # Shiki syntax highlighting
+  preview.js            # Preview rendering (code + image)
+  export-html.js        # Self-contained HTML export
+  export-image.js       # PNG export
+  ui-controls.js        # UI controls, mode switch, drop/paste, canvas size
+  themes.js             # Background presets & wallpapers
+  landing/              # Landing page assets
+  styles/               # CSS
+  wallpapers/           # Background images
 electron/               # Electron desktop wrapper
 build/                  # App icons
 ```

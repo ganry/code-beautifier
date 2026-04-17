@@ -1,6 +1,7 @@
 export function generateStandaloneHtml(highlightedCode, options) {
   const {
-    background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    mode = 'code',
+    background = 'linear-gradient(135deg, #f471b5 0%, #c0457a 100%)',
     padding = 64,
     fontSize = 14,
     windowTitle = '',
@@ -10,6 +11,13 @@ export function generateStandaloneHtml(highlightedCode, options) {
     windowWidth = 680,
     wallpaperBase64 = null,
     watermark = true,
+    imageSrc = null,
+    imageRadius = 12,
+    imageScale = 100,
+    imageFit = 'contain',
+    imageFrame = true,
+    canvasWidth = null,
+    canvasHeight = null,
   } = options
 
   const isBlur = windowStyle === 'blur'
@@ -34,16 +42,68 @@ export function generateStandaloneHtml(highlightedCode, options) {
     ? 'background: transparent !important;'
     : ''
 
+  const hasCanvas = canvasWidth && canvasHeight
+  const canvasCss = hasCanvas
+    ? `width: ${canvasWidth}px; height: ${canvasHeight}px;`
+    : 'min-height: 100vh;'
+  const bodyWrap = hasCanvas ? 'margin: 0 auto;' : ''
+
+  const scalePct = Math.max(10, imageScale) / 100
+  const imgFramedStyle = `display:block; width:100%; height:auto; border-radius:${imageRadius}px; transform: scale(${scalePct}); transform-origin: center center; object-fit:${imageFit};`
+  const imgBareStyle = `display:block; width:100%; height:auto; transform: scale(${scalePct}); transform-origin: center center; object-fit:${imageFit};`
+
+  let bodyContent
+  if (mode === 'image') {
+    if (imageFrame) {
+      bodyContent = `
+  <div class="window-frame">
+    <div class="window-titlebar">
+      <div class="traffic-lights">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <span class="window-title">${escapeHtml(windowTitle)}</span>
+    </div>
+    <div class="window-content image-content">
+      <img class="preview-image" src="${imageSrc || ''}" alt="" style="${imgFramedStyle}">
+    </div>
+  </div>`
+    } else {
+      bodyContent = `
+  <div class="preview-image-wrap" style="width:${windowWidth}px; border-radius:${imageRadius}px; overflow:hidden; ${shadowCss}">
+    <img class="preview-image" src="${imageSrc || ''}" alt="" style="${imgBareStyle}">
+  </div>`
+    }
+  } else {
+    bodyContent = `
+  <div class="window-frame">
+    <div class="window-titlebar">
+      <div class="traffic-lights">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <span class="window-title">${escapeHtml(windowTitle)}</span>
+    </div>
+    <div class="window-content">
+      ${highlightedCode}
+    </div>
+  </div>`
+  }
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${escapeHtml(windowTitle || 'Code Export')}</title>
+<title>${escapeHtml(windowTitle || (mode === 'image' ? 'Screenshot Export' : 'Code Export'))}</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { margin: 0; }
   body {
-    min-height: 100vh;
+    ${canvasCss}
+    ${bodyWrap}
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,6 +111,7 @@ export function generateStandaloneHtml(highlightedCode, options) {
     padding: ${padding}px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     position: relative;
+    overflow: hidden;
   }
   .window-frame {
     width: ${windowWidth}px;
@@ -103,6 +164,8 @@ export function generateStandaloneHtml(highlightedCode, options) {
     tab-size: 2;
     ${preBgOverride}
   }
+  .image-content { line-height: 0; }
+  .image-content img { max-width: 100%; }
   .watermark {
     position: absolute;
     bottom: 12px;
@@ -120,25 +183,13 @@ export function generateStandaloneHtml(highlightedCode, options) {
 </style>
 </head>
 <body>
-  <div class="window-frame">
-    <div class="window-titlebar">
-      <div class="traffic-lights">
-        <span class="dot red"></span>
-        <span class="dot yellow"></span>
-        <span class="dot green"></span>
-      </div>
-      <span class="window-title">${escapeHtml(windowTitle)}</span>
-    </div>
-    <div class="window-content">
-      ${highlightedCode}
-    </div>
-  </div>
+${bodyContent}
   ${watermark ? '<div class="watermark">garrik.design/code</div>' : ''}
 </body>
 </html>`
 }
 
-export function downloadHtml(html, filename = 'code-export.html') {
+export function downloadHtml(html, filename = 'beautified-export.html') {
   const blob = new Blob([html], { type: 'text/html' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -151,7 +202,7 @@ export function downloadHtml(html, filename = 'code-export.html') {
 }
 
 function escapeHtml(str) {
-  return str
+  return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')

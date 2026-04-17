@@ -25,10 +25,14 @@ async function updatePreview() {
   const themeBg = getThemeBg(opts.theme)
 
   try {
-    lastHighlightedHtml = await highlight(opts.code, opts.lang, opts.theme)
-    buildPreviewHTML(lastHighlightedHtml, { ...opts, themeBg })
+    if (opts.mode === 'image') {
+      buildPreviewHTML('', { ...opts, themeBg })
+    } else {
+      lastHighlightedHtml = await highlight(opts.code, opts.lang, opts.theme)
+      buildPreviewHTML(lastHighlightedHtml, { ...opts, themeBg })
+    }
   } catch (err) {
-    console.error('Highlight error:', err)
+    console.error('Preview error:', err)
   }
 }
 
@@ -55,8 +59,9 @@ async function handleExportPng() {
   const btn = document.getElementById('btn-export-png')
   btn.textContent = 'Exporting...'
   btn.disabled = true
+  const filename = opts.mode === 'image' ? 'screenshot-export.png' : 'code-export.png'
   try {
-    await exportAsPng(el, 'code-export.png', opts.exportScale)
+    await exportAsPng(el, filename, opts.exportScale)
   } catch (err) {
     console.error('PNG export error:', err)
   } finally {
